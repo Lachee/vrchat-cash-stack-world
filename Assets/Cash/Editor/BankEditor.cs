@@ -24,6 +24,7 @@ public class BankEditor : Editor
             var sceneCash = FindUdonSharpObjectsOfTypeEnumerable<Cash>();
             var childCash = bank.GetUdonSharpComponentsInChildren<Cash>(true);
             bank.cashPool.Pool = sceneCash.Union(childCash).Select(c => c.gameObject).ToArray();
+            EditorUtility.SetDirty(bank.cashPool);
         }
 
         // Adds all the bundles to the pool
@@ -32,6 +33,7 @@ public class BankEditor : Editor
             var sceneBundles = FindUdonSharpObjectsOfTypeEnumerable<Bundle>();
             var childBundles = bank.GetUdonSharpComponentsInChildren<Bundle>(true);
             bank.bundlePool.Pool = sceneBundles.Union(childBundles).Select(c => c.gameObject).ToArray();
+            EditorUtility.SetDirty(bank.bundlePool);
         }
     }
 
