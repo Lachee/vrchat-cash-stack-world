@@ -30,10 +30,10 @@ jobs:
       - name: Install Unity Packager
         run: |
           git clone https://github.com/Lachee/Unity-Package-Exporter.git "tools/unity-package-exporter"
-          dotnet build "tools/unity-package-exporter/UnityPackageExporter"
+          dotnet publish -c Release -o tools "tools/unity-package-exporter/UnityPackageExporter"
         
       - name: Package Project
-        run: dotnet run --project tools/unity-package-exporter/UnityPackageExporter -a -project ./ -output ./vrc-cashstack.unitypackage
+        run: dotnet run tools/UnityPackageExporter.dll -a -project ./ -output ./vrc-cashstack.unitypackage
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
