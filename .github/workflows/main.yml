@@ -33,10 +33,10 @@ jobs:
           dotnet build "tools/unity-package-exporter/UnityPackageExporter"
         
       - name: Package Project
-        run: dotnet run --project "tools/unity-package-exporter/UnityPackageExporter" -project "$(GITHUB_WORKSPACE)" -output "$GITHUB_WORKSPACE/vrc-cashstack-$(GITHUB_RUN_ID).unitypackage" -a
+        run: dotnet run --project tools/unity-package-exporter/UnityPackageExporter -project ./ -output "./vrc-cashstack-$GITHUB_RUN_ID.unitypackage" -a
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
           name: Unity Package
-          path: "$GITHUB_WORKSPACE/vrc-cashstack-$(GITHUB_RUN_ID).unitypackage"
+          path: "$GITHUB_WORKSPACE/vrc-cashstack-$GITHUB_RUN_ID.unitypackage"
