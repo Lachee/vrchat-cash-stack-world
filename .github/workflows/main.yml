@@ -13,14 +13,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+env:
+  package_path: "vrc-cashstack.unitypackage"
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -29,14 +27,18 @@ jobs:
       # Install the packager
       - name: Install Unity Packager
         run: |
-          git clone https://github.com/Lachee/Unity-Package-Exporter.git "tools/unity-package-exporter"
-          dotnet publish -c Release -o tools "tools/unity-package-exporter/UnityPackageExporter"
+          git clone https://github.com/Lachee/Unity-Package-Exporter.git tools/unity-package-exporter
+          dotnet publish -c Release -o tools tools/unity-package-exporter/UnityPackageExporter
         
+      # Pack the assets
       - name: Package Project
-        run: dotnet tools/UnityPackageExporter.dll -a -project ./ -output ./vrc-cashstack.unitypackage
+        run: |
+          echo "Creating package ${{env.package_path}}"
+          dotnet tools/UnityPackageExporter.dll --project ./ --output ${{env.package_path}} --assets "Assets/**" --exclude "Assets/UdonSharp/**" --exclude "Assets/Udon/**" --exclude "Assets/VRC*/**"
         
+      # Upload artifact
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
           name: Unity Package
-          path: ./vrc-cashstack.unitypackage
+          path: ${{env.package_path}}
